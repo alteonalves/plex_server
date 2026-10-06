@@ -13,20 +13,11 @@ services:
     ports:
       - '9000:9000'
 
-  watchtower:
-    image: containrrr/watchtower:latest
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    cap_add:
-      - NET_RAW
-      - SETUID
-
   zerotier:
     image: zerotier/zerotier:latest
     restart: unless-stopped
     volumes:
-      - /home/alteon/zerotier:/var/lib/zerotier-one
+      - /docker/appdata/zerotier:/var/lib/zerotier-one
     devices:
       - /dev/net/tun:/dev/net/tun
     cap_add:

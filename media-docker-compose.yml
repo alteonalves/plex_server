@@ -1,4 +1,4 @@
-name: 'media'
+name: "media"
 
 services:
   qbittorrent:
@@ -10,25 +10,11 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - /home/alteon/qbittorrent/config:/config
-      - /home/alteon/media/plex/Downloads/torrents:/downloads
+      - /docker/appdata/qbittorrent:/config
+      - /data/torrents:/data/torrents
     ports:
-      - '8080:8080'
+      - "8080:8080"
       - 52855:52855
-
-  jackett:
-    image: ghcr.io/linuxserver/jackett:latest
-    restart: unless-stopped
-    environment:
-      - TZ=America/Sao_Paulo
-      - PUID=1000
-      - PGID=1000
-    volumes:
-      - /home/alteon/jackett/downloads:/downloads
-      - /home/alteon/jackett/config:/config
-    ports:
-      - '9117:9117'
-
   bazarr:
     image: ghcr.io/linuxserver/bazarr:latest
     restart: unless-stopped
@@ -37,11 +23,10 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - /home/alteon/media/plex/Videos/radarr:/movies
-      - /home/alteon/media/plex/Videos/sonarr:/tv
-      - /home/alteon/bazarr/appdata/config:/config
+      - /data:/data
+      - /docker/appdata/bazarr:/config
     ports:
-      - '6767:6767'
+      - "6767:6767"
 
   overseerr:
     image: sctx/overseerr
@@ -52,9 +37,9 @@ services:
       - TZ=America/Sao_Paulo
       - PORT=5055
     volumes:
-      - /home/alteon/overseerr/config:/app/config
+      - /docker/appdata/overseerr:/app/config
     ports:
-      - '5055:5055'
+      - "5055:5055"
 
   prowlarr:
     image: ghcr.io/hotio/prowlarr:latest
@@ -66,17 +51,17 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - /home/alteon/prowlarr/config:/config
+      - /docker/appdata/prowlarr:/config
     ports:
-      - '9696:9696'
+      - "9696:9696"
 
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     restart: unless-stopped
     volumes:
-      - /home/alteon/flaresolverr/config:/config
+      - /docker/appdata/flaresolverr:/config
     ports:
-      - '8191:8191'
+      - "8191:8191"
 
   radarr:
     image: ghcr.io/linuxserver/radarr:latest
@@ -88,12 +73,10 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - /home/alteon/radarr/appdata/config:/config
-      - /home/alteon/media/plex/Downloads/torrents:/downloads
-      - /home/alteon/media/plex/Videos/radarr/movies:/movies
-      - /home/alteon/media/plex/Videos/radarr/anime:/anime
+      - /data:/data
+      - /docker/appdata/radarr:/config
     ports:
-      - '7878:7878'
+      - "7878:7878"
 
   sonarr:
     image: ghcr.io/linuxserver/sonarr:latest
@@ -105,27 +88,26 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - /home/alteon/sonarr/appdata/config:/config
-      - /home/alteon/media/plex/Videos/sonarr:/tv
-      - /home/alteon/media/plex/Downloads/torrents:/downloads
+      - /data:/data
+      - /docker/appdata/sonarr:/config
     ports:
-      - '8989:8989'
+      - "8989:8989"
 
   plex:
-    image: plexinc/pms-docker:latest
+    image: lscr.io/linuxserver/plex:latest
+    platform: linux/amd64
     restart: unless-stopped
     environment:
       - TZ=America/Sao_Paulo
       - PUID=1000
       - PGID=1000
-      - VA_DRIVER=IHD
-      - PLEX_HW_TRANS_MAX=16
+      - VERSION=docker
+      - DOCKER_MODS=jefflessard/plex-vaapi-amdgpu-mod
     volumes:
-      - /home/alteon/plex/config:/config
-      - /home/alteon/plex/data:/data
-      - /home/alteon/plex/transcode:/transcode
-      - /home/alteon/media/plex/Videos:/home/alteon/media
-      - /home/alteon/media/plex/Downloads/torrents:/home/alteon/media
+      - /docker/appdata/plex/config:/config
+      - /docker/appdata/plex/data:/data
+      - /docker/appdata/plex/transcode:/transcode
+      - /data/media:/data/media
     devices:
       - /dev/dri:/dev/dri
       - /dev/bus/usb:/dev/bus/usb
