@@ -28,8 +28,9 @@ services:
     ports:
       - "6767:6767"
 
-  overseerr:
-    image: sctx/overseerr
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    init: true
     restart: unless-stopped
     depends_on:
       - qbittorrent
